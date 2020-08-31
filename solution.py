@@ -1,5 +1,5 @@
 a = input()
-b = input()
+b = input().split()
 
 print(a)
 print(b)
