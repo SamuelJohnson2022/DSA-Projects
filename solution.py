@@ -1,3 +1,5 @@
+# Collaborators: Samuel Johnson, Nikita Petrenko, Jason Novillo
+
 import sys
 # Take the two input arrays and saves them to a and b respectively
 firstArray = list(map(int, input().split()))
