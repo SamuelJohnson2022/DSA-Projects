@@ -21,4 +21,6 @@ for twoIndex in range(len(firstArray) + len(secondArray) - 4):
         finalArray.append(secondArray[secondIndex])
         secondIndex += 1
 
-print(finalArray)
+print(str(len(finalArray)) + " ")
+for num in finalArray:
+    print(str(num) + " ")
