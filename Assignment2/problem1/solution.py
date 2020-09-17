@@ -42,7 +42,7 @@ def merge_sort(anotherArray):
 
 
 anotherInput = input()
-arrayToSort = input().split(" ")
+arrayToSort = list(map(int, input().split()))
 finalArray = merge_sort(arrayToSort)
 
 print(numOfSwaps)
