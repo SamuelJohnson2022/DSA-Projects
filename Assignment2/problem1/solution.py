@@ -5,6 +5,7 @@ numOfSwaps = 0
 
 
 def merge_sorted(firstArray, secondArray):
+    global numOfSwaps
     firstArray.append(sys.maxsize)
     secondArray.append(sys.maxsize)
     finalArray = []
