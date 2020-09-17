@@ -23,7 +23,7 @@ def merge_sorted(firstArray, secondArray):
             finalArray.append(secondArray[secondIndex])
             secondIndex += 1
             if firstArray[firstIndex] != sys.maxsize:
-                numOfSwaps += 1
+                numOfSwaps += len(firstArray) - firstIndex - 1
     return finalArray
 
 
