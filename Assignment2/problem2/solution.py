@@ -16,9 +16,21 @@ def FindSmallestIndex(yList):
     return smallestPointIndex
 
 
+def IsTurningLeft(pAX, pAY, pBX, pBY, pKX, pKY):
+
+    xA = pAX - pBX
+    yA = pAY - pBY
+    xB = pKX - pAX
+    yB = pKY - pAY
+
+    if (xA*yB - xB*yA) >= 0:
+        return True
+    else:
+        return False
+
+
 def upper_envelope(xList, yList):
 
-    lowerHalfCH = []
     # Find p*
     pStar = FindSmallestIndex(yList)
     pStarX = xList[pStar]
@@ -39,6 +51,38 @@ def upper_envelope(xList, yList):
 
     for i in range(3, len(sortedXArray)):
         while len(stackX) > 0:
+            pAX = stackX[-1]
+            pBX = stackX[-2]
+            pAY = stackY[-1]
+            pBY = stackY[-2]
+
+            pKX = sortedXArray[i]
+            pKY = sortedYArray[i]
+
+            if IsTurningLeft(pAX, pAY, pBX, pBY, pKX, pKY):
+                stackX.pop()
+                stackY.pop()
+            else:
+                break
+        stackX.append(pKX)
+        stackY.append(pKY)
+
+    leftMostX = sortedXArray[-1]
+    leftMostY = sortedYArray[-1]
+
+    rightMostX = sortedXArray[0]
+    rightMostY = sortedYArray[0]
+
+    avgX = (rightMostX - leftMostX)/2
+
+    upperHalfNum = 0
+    lowerHalfNum = 0
+
+    for i in range(len(stackX)):
+        if(stackY[i] >= leftMostY and stackX[i] < avgX) or (stackY[i] >= rightMostY and stackX[i] > avgX):
+            upperHalfNum += 1
+        else:
+            lowerHalfNum += 1
 
     return upperHalfNum, lowerHalfNum
 
@@ -66,20 +110,20 @@ def merge_sorted(firstXArray, secondXArray, firstYArray, secondYArray, pStarX, p
             finalXArray.append(secondXArray[secondIndex])
             finalYArray.append(secondYArray[secondIndex])
             secondIndex += 1
-
-        firstAngle = math.atan(
-            (firstYArray[firstIndex] - pStarY)/(firstXArray[firstIndex] - pStarX))
-        secondAngle = math.atan(
-            (secondYArray[secondIndex] - pStarY)/(secondXArray[secondIndex] - pStarX))
-
-        if firstAngle <= secondAngle:
-            finalXArray.append(firstXArray[firstIndex])
-            finalYArray.append(firstYArray[firstIndex])
-            firstIndex += 1
         else:
-            finalXArray.append(secondXArray[secondIndex])
-            finalYArray.append(secondYArray[secondIndex])
-            secondIndex += 1
+            firstAngle = math.atan(
+                (firstYArray[firstIndex] - pStarY)/(firstXArray[firstIndex] - pStarX))
+            secondAngle = math.atan(
+                (secondYArray[secondIndex] - pStarY)/(secondXArray[secondIndex] - pStarX))
+
+            if firstAngle <= secondAngle:
+                finalXArray.append(firstXArray[firstIndex])
+                finalYArray.append(firstYArray[firstIndex])
+                firstIndex += 1
+            else:
+                finalXArray.append(secondXArray[secondIndex])
+                finalYArray.append(secondYArray[secondIndex])
+                secondIndex += 1
     return finalXArray, finalYArray
 
 
@@ -110,4 +154,6 @@ for i in range(numOfLines):
     aList.append(abPair[0])
     bList.append(abPair[1])
 
-print()
+upperHalfNum, lowerHalfNum = upper_envelope(aList, bList)
+
+print(str(upperHalfNum) + " " + str(lowerHalfNum))
