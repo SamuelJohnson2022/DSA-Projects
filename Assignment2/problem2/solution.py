@@ -16,7 +16,20 @@ def FindSmallestIndex(yList):
     return smallestPointIndex
 
 
-def IsTurningLeft(pAX, pAY, pBX, pBY, pKX, pKY):
+def FindLargestIndex(yList):
+
+    largestPoint = yList[0]
+    largestPointIndex = 0
+
+    for i in range(len(yList)):
+        if yList[i] > largestPoint:
+            largestPoint = yList[i]
+            largestPointIndex = i
+
+    return largestPointIndex
+
+
+def IsTurningLeft(pBX, pBY, pAX, pAY, pKX, pKY):  # fLIPPED A AND B AND IT WORKED
 
     xA = pAX - pBX
     yA = pAY - pBY
@@ -50,7 +63,7 @@ def upper_envelope(xList, yList):
     stackY.append(sortedYArray[2])
 
     for i in range(3, len(sortedXArray)):
-        while len(stackX) > 0:
+        while len(stackX) > 2:
             pAX = stackX[-1]
             pBX = stackX[-2]
             pAY = stackY[-1]
@@ -67,11 +80,13 @@ def upper_envelope(xList, yList):
         stackX.append(pKX)
         stackY.append(pKY)
 
-    leftMostX = sortedXArray[-1]
-    leftMostY = sortedYArray[-1]
+    leftIndex = FindSmallestIndex(stackX)
+    leftMostX = sortedXArray[leftIndex]
+    leftMostY = sortedYArray[leftIndex]
 
-    rightMostX = sortedXArray[0]
-    rightMostY = sortedYArray[0]
+    rightIndex = FindLargestIndex(stackX)
+    rightMostX = sortedXArray[rightIndex]
+    rightMostY = sortedYArray[rightIndex]
 
     avgX = (rightMostX - leftMostX)/2
 
@@ -79,7 +94,7 @@ def upper_envelope(xList, yList):
     lowerHalfNum = 0
 
     for i in range(len(stackX)):
-        if(stackY[i] >= leftMostY and stackX[i] < avgX) or (stackY[i] >= rightMostY and stackX[i] > avgX):
+        if(stackY[i] > leftMostY and stackX[i] < avgX) or (stackY[i] > rightMostY and stackX[i] > avgX):
             upperHalfNum += 1
         else:
             lowerHalfNum += 1
@@ -88,10 +103,6 @@ def upper_envelope(xList, yList):
 
 
 def merge_sorted(firstXArray, secondXArray, firstYArray, secondYArray, pStarX, pStarY):
-    firstXArray.append(sys.maxsize)
-    secondXArray.append(sys.maxsize)
-    firstYArray.append(sys.maxsize)
-    secondYArray.append(sys.maxsize)
 
     finalXArray = []
     finalYArray = []
@@ -101,8 +112,16 @@ def merge_sorted(firstXArray, secondXArray, firstYArray, secondYArray, pStarX, p
     secondIndex = 0
 
     # Loops through both arrays and add the values in ascending order by comparison
-    for i in range(len(firstXArray) + len(secondXArray) - 2):
-        if firstYArray[firstIndex] == pStarY and firstXArray[firstIndex] == pStarX:
+    while((firstIndex + secondIndex) < len(firstXArray) + len(secondXArray)):
+        if firstIndex == len(firstXArray):
+            finalXArray.append(secondXArray[secondIndex])
+            finalYArray.append(secondYArray[secondIndex])
+            secondIndex += 1
+        elif secondIndex == len(secondXArray):
+            finalXArray.append(firstXArray[firstIndex])
+            finalYArray.append(firstYArray[firstIndex])
+            firstIndex += 1
+        elif firstYArray[firstIndex] == pStarY and firstXArray[firstIndex] == pStarX:
             finalXArray.append(firstXArray[firstIndex])
             finalYArray.append(firstYArray[firstIndex])
             firstIndex += 1
@@ -111,10 +130,10 @@ def merge_sorted(firstXArray, secondXArray, firstYArray, secondYArray, pStarX, p
             finalYArray.append(secondYArray[secondIndex])
             secondIndex += 1
         else:
-            firstAngle = math.atan(
-                (firstYArray[firstIndex] - pStarY)/(firstXArray[firstIndex] - pStarX))
-            secondAngle = math.atan(
-                (secondYArray[secondIndex] - pStarY)/(secondXArray[secondIndex] - pStarX))
+            firstAngle = math.acos(
+                (firstXArray[firstIndex] - pStarX)/math.sqrt((firstXArray[firstIndex] - pStarX)**2 + (firstYArray[firstIndex] - pStarY)**2))
+            secondAngle = math.acos(
+                (secondXArray[secondIndex] - pStarX)/math.sqrt((secondXArray[secondIndex] - pStarX)**2 + (secondYArray[secondIndex] - pStarY)**2))
 
             if firstAngle <= secondAngle:
                 finalXArray.append(firstXArray[firstIndex])
@@ -152,7 +171,7 @@ numOfLines = int(input())
 for i in range(numOfLines):
     abPair = list(map(float, input().split()))
     aList.append(abPair[0])
-    bList.append(abPair[1])
+    bList.append(abPair[1]*(-1))
 
 upperHalfNum, lowerHalfNum = upper_envelope(aList, bList)
 
