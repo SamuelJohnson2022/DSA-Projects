@@ -81,21 +81,33 @@ def upper_envelope(xList, yList):
         stackY.append(pKY)
 
     leftIndex = FindSmallestIndex(stackX)
-    leftMostX = sortedXArray[leftIndex]
-    leftMostY = sortedYArray[leftIndex]
+    leftMostX = stackX[leftIndex]
+    leftMostY = stackY[leftIndex]
 
     rightIndex = FindLargestIndex(stackX)
-    rightMostX = sortedXArray[rightIndex]
-    rightMostY = sortedYArray[rightIndex]
-
-    avgX = (rightMostX - leftMostX)/2
+    rightMostX = stackX[rightIndex]
+    rightMostY = stackY[rightIndex]
 
     upperHalfNum = 0
     lowerHalfNum = 0
 
+    rotateLeftX = stackX[leftIndex:] + stackX[:leftIndex]
+    rotateLeftY = stackY[leftIndex:] + stackY[:leftIndex]
+
+    rotateRightX = stackX[rightIndex:] + stackX[:rightIndex]
+    rotateRightY = stackY[rightIndex:] + stackY[:rightIndex]
+
     for i in range(len(stackX)):
-        if(stackY[i] > leftMostY and stackX[i] < avgX) or (stackY[i] > rightMostY and stackX[i] > avgX):
+        if(rotateLeftX[i] == rightMostX and rotateLeftY[i] == rightMostY):
             upperHalfNum += 1
+            break
+        else:
+            upperHalfNum += 1
+
+    for i in range(len(stackX)):
+        if(rotateRightX[i] == leftMostX and rotateRightY[i] == leftMostY):
+            lowerHalfNum += 1
+            break
         else:
             lowerHalfNum += 1
 
