@@ -12,6 +12,8 @@ visited = []
 pre = []
 post = []
 postlist = [] 
+magic_order = []
+num_cc = 0
 
 for i in range(num_vertices):
     visited.append(0)
@@ -36,6 +38,7 @@ def DFS_time(graph):
     for i in range(num_vertices):
         if (visited[i] == 0):
             explore(graph, i)
+    
 
 def explore(graph, v):
     global visited
@@ -53,11 +56,31 @@ def explore(graph, v):
     clock += 1
     postlist.append(v)
 
+def specific_order(graph):
+    global magic_order
+    global r_graph
+    global postlist
+    DFS_time(r_graph)
+    postlist.reverse()
+    magic_order = postlist
 
-    
+def explore_specific(graph, vi):
+    global visited
+    visited[vi] = num_cc
+    for each in graph[vi]:
+        if (visited[each-1] == 0):
+            explore(graph,each-1)
 
+def DFS_specific(graph):
+    global num_cc
+    num_cc = 0
+    for vi in range(num_vertices):
+        if (visited[vi] == 0):
+            num_cc += 1
+            explore_specific(graph, vi)
 
-
-
-
-
+specific_order(graph)
+for i in range(num_vertices):
+    visited[i] = 0
+DFS_specific(magic_order)
+print(num_cc)
