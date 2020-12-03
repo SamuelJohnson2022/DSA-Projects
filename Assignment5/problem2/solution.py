@@ -11,14 +11,14 @@ num_edges = line_input[1]
 
 edge_weights = []
 
+# Save edge weights in a list
 for i in range(1, num_edges + 1):
     line_input = list(map(int, input().split(" ")))
     start_vertex = line_input[0]
     end_vertex = line_input[1]
     edge_weights.append(line_input[2])
 
-print(edge_weights)
-
+# Sort edge weights
+# print(edge_weights)
 edge_weights.sort()
 
-# sort edges in increasing order of weight
