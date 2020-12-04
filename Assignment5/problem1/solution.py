@@ -9,7 +9,10 @@ class Interval:
         self.v = v
 
     def __lt__(self, other):
-        return self.t < other.t
+        if self.t == other.t:
+            return self.s < other.s
+        else:
+            return self.t < other.t
 
 
 intervals = []
@@ -23,14 +26,25 @@ def binary_search(k, a, b):
 
     m = int((a + b)/2)
 
-    if(intervals[m].t <= intervals[k-1].s and intervals[k-1].s <= intervals[m + 1].t):
+    if(intervals[m + 1].t >= intervals[k-1].s and intervals[k-1].s >= intervals[m].t):
         return m
 
-    if(intervals[m].t > intervals[k-1].s):
+    if(intervals[m].t >= intervals[k-1].s):
         return binary_search(k, a, m)
 
-    if(intervals[k-1].s > intervals[m + 1].t):
+    if(intervals[k-1].s >= intervals[m + 1].t):
         return binary_search(k, m+1, b)
+
+
+def search(k):
+    global intervals
+
+    index = 0
+
+    while(intervals[index].t <= intervals[k].s):
+        index += 1
+
+    return index
 
 
 num_of_jobs = int(input())
@@ -49,6 +63,6 @@ F.append(0)
 
 for i in range(1, len(intervals) + 1):
     F.append(max(F[i - 1], intervals[i - 1].v +
-                 F[binary_search(i, 0, i - 1) + 1]))
+                 F[search(i - 1)]))
 
 print(F[len(intervals)])
