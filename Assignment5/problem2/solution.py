@@ -3,6 +3,12 @@
 # Jason Novillo - jxn262
 import sys
 
+class Node():
+    def __init__(self, data, height, parent):
+        self.data = data
+        self.height = height
+        self.parent = parent
+
 line_input = list(map(int, input().split(" ")))
 
 # Reads
@@ -22,3 +28,16 @@ for i in range(1, num_edges + 1):
 # print(edge_weights)
 edge_weights.sort()
 
+E1 = []
+
+def make_set(v):
+    v.height = 1;
+    v.parent = v;
+
+def find(v):
+    while (v.parent != v):
+        v = v.parent
+    return v
+
+for v in range(num_vertices + 1):
+    make_set(v)
