@@ -1,0 +1,54 @@
+# Samuel Johnson - sdj5203
+# Nikita Petrenko - nmp5361
+# Jason Novillo - jxn262
+
+class Interval:
+    def __init__(self, s, t, v):
+        self.s = s
+        self.t = t
+        self.v = v
+
+    def __lt__(self, other):
+        return self.t < other.t
+
+
+intervals = []
+
+
+def binary_search(k, a, b):
+    global intervals
+
+    if b <= a:
+        return -1
+
+    m = int((a + b)/2)
+
+    if(intervals[m].t <= intervals[k-1].s and intervals[k-1].s <= intervals[m + 1].t):
+        return m
+
+    if(intervals[m].t > intervals[k-1].s):
+        return binary_search(k, a, m)
+
+    if(intervals[k-1].s > intervals[m + 1].t):
+        return binary_search(k, m+1, b)
+
+
+num_of_jobs = int(input())
+
+
+for i in range(num_of_jobs):
+    line_input = list(map(int, input().split()))
+    interval = Interval(line_input[0], line_input[1], line_input[2])
+    intervals.append(interval)
+
+# Sort the intervals based on the t value
+intervals.sort()
+
+F = []
+F.append(0)
+
+for i in range(1, len(intervals) + 1):
+    F.append(max(F[i - 1], intervals[i - 1].v +
+                 F[binary_search(i, 0, i - 1) + 1]))
+
+print(F[len(intervals)])
